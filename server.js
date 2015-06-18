@@ -10,11 +10,10 @@
 var express = require('express'),        // call express
     app = express(),                 // define our app using express
     bodyParser = require('body-parser'),
+    errHandler = require('./error'),
     mongoose = require('mongoose');
 
 mongoose.connect('mongodb://localhost:27017/exspend'); // connect to our database
-
-var Transaction = require('./app/models/transaction');
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
@@ -26,15 +25,13 @@ var port = process.env.PORT || 8080;        // set our port
 
 // ROUTER
 
-var router = require('./router')(app);
+var router = require('./routes')(app);
 
 // Error Handling
-app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-});
-
+app.use(errHandler.logErrors);
+app.use(errHandler.errorHandler);
 
 // START THE SERVER
 // =============================================================================
 app.listen(port);
-console.log('Magic happens on port ' + port);
+console.log('Api running on port ' + port);
