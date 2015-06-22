@@ -20,9 +20,14 @@ module.exports = function (app) {
         res.json({ message: 'hooray! welcome to our api!' });
     });
 
-    router.route('/transactions')
-        .get(require('./controllers/transactions').get)
-        .post(require('./controllers/transactions').post);
+    var transactions = require('./controllers/transactions');
+    router.route('/transactions/')
+        .get(transactions.getAll)
+        .post(transactions.post);
+    router.route('/transactions/search/')
+        .get(transactions.search);
+    router.route('/transactions/:id/')
+        .get(transactions.getOne);
 
     // all of our routes will be prefixed with /api
     app.use('/api', router);
